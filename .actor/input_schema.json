@@ -1,0 +1,105 @@
+{
+  "title": "Freelancer.com Jobs Scraper",
+  "description": "Extract freelance job listings from Freelancer.com. Search by category, keyword, or provide a custom URL. Supports automatic pagination and detailed job data extraction.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "startUrl": {
+      "title": "Start URL",
+      "type": "string",
+      "description": "Start scraping from a specific Freelancer.com jobs URL (e.g., https://www.freelancer.com/jobs/seo). If provided, this overrides keyword/category.",
+      "editor": "textfield",
+      "example": "https://www.freelancer.com/jobs/seo"
+    },
+    "keyword": {
+      "title": "Search Keyword",
+      "type": "string",
+      "description": "Job search keyword or skill (e.g., 'SEO', 'Web Development', 'Graphic Design'). Used for filtering results.",
+      "editor": "textfield",
+      "prefill": "seo",
+      "example": "seo"
+    },
+    "category": {
+      "title": "Job Category",
+      "type": "string",
+      "description": "Freelancer.com job category slug (e.g., 'seo', 'web-development', 'graphic-design'). Browse categories at freelancer.com/jobs.",
+      "editor": "textfield",
+      "prefill": "seo",
+      "example": "seo"
+    },
+    "jobType": {
+      "title": "Job Type",
+      "type": "string",
+      "description": "Filter by job type: 'all', 'fixed' (fixed price projects), or 'hourly' (hourly projects).",
+      "editor": "select",
+      "enum": ["all", "fixed", "hourly"],
+      "default": "all"
+    },
+    "minBudget": {
+      "title": "Minimum Budget",
+      "type": "integer",
+      "description": "Minimum project budget in USD (optional filter).",
+      "editor": "number",
+      "minimum": 0
+    },
+    "maxBudget": {
+      "title": "Maximum Budget",
+      "type": "integer",
+      "description": "Maximum project budget in USD (optional filter).",
+      "editor": "number",
+      "minimum": 0
+    },
+    "sortBy": {
+      "title": "Sort Results By",
+      "type": "string",
+      "description": "Sort job listings by relevance, newest first, or budget.",
+      "editor": "select",
+      "enum": ["relevance", "newest", "budget"],
+      "default": "relevance"
+    },
+    "collectDetails": {
+      "title": "Extract Full Job Details",
+      "type": "boolean",
+      "description": "Enable to visit each job page and extract complete descriptions, skills, client info, and more. Disabling this speeds up scraping but returns limited data.",
+      "editor": "checkbox",
+      "default": true
+    },
+    "results_wanted": {
+      "title": "Maximum Results",
+      "type": "integer",
+      "description": "Maximum number of job listings to extract. Set to higher values to collect more data.",
+      "minimum": 1,
+      "maximum": 1000,
+      "default": 100,
+      "editor": "number"
+    },
+    "max_pages": {
+      "title": "Maximum Pages",
+      "type": "integer",
+      "description": "Safety limit on the number of listing pages to crawl. Prevents excessive scraping.",
+      "minimum": 1,
+      "maximum": 100,
+      "editor": "number",
+      "default": 20
+    },
+    "proxyConfiguration": {
+      "title": "Proxy Configuration",
+      "type": "object",
+      "description": "Proxy settings for Freelancer.com. Residential proxies recommended for best results and to avoid blocks.",
+      "editor": "proxy",
+      "default": {
+        "useApifyProxy": true,
+        "apifyProxyGroups": ["RESIDENTIAL"]
+      }
+    },
+    "dedupe": {
+      "title": "Remove Duplicates",
+      "type": "boolean",
+      "description": "Automatically remove duplicate job listings based on URL.",
+      "editor": "checkbox",
+      "default": true
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

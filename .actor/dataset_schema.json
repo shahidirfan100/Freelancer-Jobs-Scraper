@@ -1,0 +1,125 @@
+{
+  "actorSpecification": 1,
+  "fields": {},
+  "views": {
+    "overview": {
+      "title": "Overview",
+      "transformation": {
+        "fields": [
+          "title",
+          "company",
+          "category",
+          "location",
+          "salary",
+          "job_type",
+          "skills",
+          "date_posted",
+          "url"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "title": {
+            "label": "Project Title",
+            "format": "text"
+          },
+          "company": {
+            "label": "Client",
+            "format": "text"
+          },
+          "category": {
+            "label": "Category",
+            "format": "text"
+          },
+          "location": {
+            "label": "Location",
+            "format": "text"
+          },
+          "salary": {
+            "label": "Budget",
+            "format": "text"
+          },
+          "job_type": {
+            "label": "Type",
+            "format": "text"
+          },
+          "skills": {
+            "label": "Skills Required",
+            "format": "array"
+          },
+          "date_posted": {
+            "label": "Posted Date",
+            "format": "text"
+          },
+          "url": {
+            "label": "Job URL",
+            "format": "link"
+          }
+        }
+      }
+    },
+    "detailed": {
+      "title": "Detailed View",
+      "transformation": {
+        "fields": [
+          "title",
+          "company",
+          "category",
+          "location",
+          "salary",
+          "job_type",
+          "skills",
+          "date_posted",
+          "description_text",
+          "url"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "title": {
+            "label": "Project Title",
+            "format": "text"
+          },
+          "company": {
+            "label": "Client",
+            "format": "text"
+          },
+          "category": {
+            "label": "Category",
+            "format": "text"
+          },
+          "location": {
+            "label": "Location",
+            "format": "text"
+          },
+          "salary": {
+            "label": "Budget",
+            "format": "text"
+          },
+          "job_type": {
+            "label": "Type",
+            "format": "text"
+          },
+          "skills": {
+            "label": "Skills",
+            "format": "array"
+          },
+          "date_posted": {
+            "label": "Posted",
+            "format": "text"
+          },
+          "description_text": {
+            "label": "Description",
+            "format": "text"
+          },
+          "url": {
+            "label": "URL",
+            "format": "link"
+          }
+        }
+      }
+    }
+  }
+}
