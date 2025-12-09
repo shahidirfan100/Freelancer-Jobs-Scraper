@@ -138,18 +138,56 @@ async function main() {
                                 $('.PageProjectViewLogout-title').text().trim() || null;
                         }
 
-                        // Extract budget/salary info
+                        // Extract budget/salary info (enhanced)
                         if (!data.salary) {
-                            const budgetText = $('[class*="budget"], [class*="price"]').first().text().trim();
+                            // Try multiple selectors for budget
+                            const budgetSelectors = [
+                                'p.PageProjectViewLogout-budget',
+                                '.Budget',
+                                '[class*="ProjectBudget"]',
+                                '[class*="budget"]',
+                                '[class*="price"]'
+                            ];
+                            let budgetText = '';
+                            for (const sel of budgetSelectors) {
+                                const el = $(sel).first();
+                                if (el.length) {
+                                    budgetText = el.text().trim();
+                                    if (budgetText) break;
+                                }
+                            }
+                            // Also look for currency patterns in page
+                            if (!budgetText) {
+                                const pageHtml = $.html();
+                                const currencyMatch = pageHtml.match(/[\$€£]\s*\d+[\d,\.]*\s*[-–]?\s*[\$€£]?\s*\d*[\d,\.]*/i) ||
+                                    pageHtml.match(/\d+[\d,\.]*\s*[-–]\s*\d+[\d,\.]*\s*(USD|EUR|GBP|AUD|CAD)/i);
+                                if (currencyMatch) budgetText = currencyMatch[0].trim();
+                            }
                             data.salary = budgetText || null;
                         }
 
-                        // Extract job type (Fixed/Hourly)
-                        const jobTypeEl = $('[class*="type"]').filter((_, el) => {
-                            const text = $(el).text().toLowerCase();
-                            return text.includes('fixed') || text.includes('hourly');
-                        }).first().text().trim();
-                        data.job_type = jobTypeEl || null;
+                        // Extract job type (Fixed/Hourly) - enhanced detection
+                        const pageText = $.text();
+                        const pageTextLower = pageText.toLowerCase();
+                        let detectedJobType = null;
+
+                        // Check for explicit type indicators
+                        if (pageTextLower.includes('paid on delivery') || pageTextLower.includes('fixed price') ||
+                            pageTextLower.includes('fixed-price') || pageTextLower.includes('project budget')) {
+                            detectedJobType = 'Fixed Price';
+                        } else if (pageTextLower.includes('hourly') || pageTextLower.includes('per hour') ||
+                            pageTextLower.includes('/hr') || pageTextLower.includes('/ hr')) {
+                            detectedJobType = 'Hourly';
+                        } else {
+                            // Try element-based detection
+                            const typeEl = $('[class*="type"]').filter((_, el) => {
+                                const t = $(el).text().toLowerCase();
+                                return t.includes('fixed') || t.includes('hourly');
+                            }).first().text().trim().toLowerCase();
+                            if (typeEl.includes('hourly')) detectedJobType = 'Hourly';
+                            else if (typeEl.includes('fixed')) detectedJobType = 'Fixed Price';
+                        }
+                        data.job_type = detectedJobType;
 
                         // Extract skills/tags
                         const skills = [];
@@ -174,11 +212,38 @@ async function main() {
                                 'Remote' || null;
                         }
 
-                        // Extract date posted
+                        // Extract date posted (enhanced)
                         if (!data.date_posted) {
+                            // Try time element first
                             const timeEl = $('time[datetime]').first();
-                            data.date_posted = timeEl.attr('datetime') ||
-                                timeEl.text().trim() || null;
+                            let postedDate = timeEl.attr('datetime') || timeEl.text().trim();
+
+                            // Look for relative time patterns
+                            if (!postedDate) {
+                                const timePatterns = [
+                                    /Posted\s+(less than\s+)?\d+\s+\w+\s+ago/i,
+                                    /\d+\s+(minute|hour|day|week|month)s?\s+ago/i,
+                                    /less than\s+\d+\s+\w+\s+ago/i,
+                                    /just now/i,
+                                    /today/i
+                                ];
+                                const text = $.text();
+                                for (const pattern of timePatterns) {
+                                    const match = text.match(pattern);
+                                    if (match) {
+                                        postedDate = match[0].trim();
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Look for date in specific elements
+                            if (!postedDate) {
+                                const dateEl = $('[class*="posted"], [class*="date"], [class*="time"]').first();
+                                if (dateEl.length) postedDate = dateEl.text().trim();
+                            }
+
+                            data.date_posted = postedDate || null;
                         }
 
                         // Extract client/employer info
@@ -186,10 +251,25 @@ async function main() {
                             $('[class*="employer"]').first().text().trim();
                         data.company = clientName || 'Freelancer Client';
 
+                        // Extract category from URL if not provided in input
+                        let extractedCategory = category;
+                        if (!extractedCategory) {
+                            try {
+                                const urlObj = new URL(request.url);
+                                const pathParts = urlObj.pathname.split('/').filter(Boolean);
+                                // Pattern: /projects/{category}/{slug}
+                                if (pathParts[0] === 'projects' && pathParts.length >= 2) {
+                                    extractedCategory = pathParts[1]
+                                        .replace(/-/g, ' ')
+                                        .replace(/\b\w/g, c => c.toUpperCase());
+                                }
+                            } catch { /* ignore */ }
+                        }
+
                         const item = {
                             title: data.title || null,
                             company: data.company || null,
-                            category: category || null,
+                            category: extractedCategory || null,
                             location: data.location || null,
                             salary: data.salary || null,
                             job_type: data.job_type || null,
