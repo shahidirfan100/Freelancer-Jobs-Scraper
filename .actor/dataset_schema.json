@@ -14,6 +14,8 @@
           "job_type",
           "skills",
           "date_posted",
+          "project_id",
+          "bids_count",
           "url"
         ]
       },
@@ -50,6 +52,14 @@
           },
           "date_posted": {
             "label": "Posted Date",
+            "format": "text"
+          },
+          "project_id": {
+            "label": "Project ID",
+            "format": "text"
+          },
+          "bids_count": {
+            "label": "Bids",
             "format": "text"
           },
           "url": {

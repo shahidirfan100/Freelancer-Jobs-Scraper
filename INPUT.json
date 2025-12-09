@@ -1,9 +1,12 @@
 {
   "keyword": "seo",
   "category": "seo",
-  "results_wanted": 50,
-  "max_pages": 5,
+  "results_wanted": 20,
+  "max_pages": 3,
   "collectDetails": true,
   "jobType": "all",
-  "sortBy": "relevance"
+  "sortBy": "relevance",
+  "requestDelay": 1500,
+  "useApiFirst": true,
+  "dedupe": true
 }

@@ -32,7 +32,11 @@
       "type": "string",
       "description": "Filter by job type: 'all', 'fixed' (fixed price projects), or 'hourly' (hourly projects).",
       "editor": "select",
-      "enum": ["all", "fixed", "hourly"],
+      "enum": [
+        "all",
+        "fixed",
+        "hourly"
+      ],
       "default": "all"
     },
     "minBudget": {
@@ -54,7 +58,11 @@
       "type": "string",
       "description": "Sort job listings by relevance, newest first, or budget.",
       "editor": "select",
-      "enum": ["relevance", "newest", "budget"],
+      "enum": [
+        "relevance",
+        "newest",
+        "budget"
+      ],
       "default": "relevance"
     },
     "collectDetails": {
@@ -89,7 +97,9 @@
       "editor": "proxy",
       "default": {
         "useApifyProxy": true,
-        "apifyProxyGroups": ["RESIDENTIAL"]
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ]
       }
     },
     "dedupe": {
@@ -98,6 +108,22 @@
       "description": "Automatically remove duplicate job listings based on URL.",
       "editor": "checkbox",
       "default": true
+    },
+    "requestDelay": {
+      "title": "Request Delay (ms)",
+      "type": "integer",
+      "description": "Minimum delay between requests in milliseconds. Higher values help avoid rate limiting but slow down scraping.",
+      "minimum": 500,
+      "maximum": 10000,
+      "default": 1500,
+      "editor": "number"
+    },
+    "useApiFirst": {
+      "title": "Use API Strategy First",
+      "type": "boolean",
+      "description": "Attempt to use Freelancer.com's internal API for faster data retrieval before falling back to HTML scraping.",
+      "default": true,
+      "editor": "checkbox"
     }
   },
   "required": [],
