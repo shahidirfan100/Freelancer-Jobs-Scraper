@@ -2,11 +2,10 @@
   "keyword": "seo",
   "category": "seo",
   "results_wanted": 20,
-  "max_pages": 3,
+  "max_pages": 5,
   "collectDetails": true,
   "jobType": "all",
   "sortBy": "relevance",
   "requestDelay": 1500,
-  "useApiFirst": true,
   "dedupe": true
 }
